@@ -1,6 +1,6 @@
 # CityWheelDialog
 会搜商务网app,中国省市区，wheel选择器。
- ![image](https://github.com/yonzhi/CityWheelDialog/blob/master/screenshots/g3.gif)
+ ![image](https://github.com/yonzhi/CityWheelDialog/blob/master/screenshots/q.png)
 #使用：
 ## Add it in your root build.gradle at the end of repositories:
 
