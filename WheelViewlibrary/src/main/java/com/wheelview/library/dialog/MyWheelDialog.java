@@ -46,8 +46,10 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
     private HashMap<Integer, String[]> area_citycode = new HashMap<>();
     private HashMap<Integer, HashMap<Integer, String[]>> area_country = new HashMap<>();
     private HashMap<Integer, HashMap<Integer, String[]>> area_countrycode = new HashMap<>();
-    public static final String TAG = "qqq";
-    public DialogStyle TYPE;
+    public static final String TAG = "test";
+    private DialogStyle TYPE;
+    private AddressSaveAllEntity saveAllEntity = null;
+
 
     public MyWheelDialog(Context context, DialogStyle type, OnWheelClickLitener wheelClickLitener) {
         super(context, R.style.transparentFrameWindowStyle);
@@ -79,12 +81,24 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
         /**
          * 加载数据
          */
-        json = readFromAsset(context);
-        if (TYPE.getValue() == 1) {
-            province(json);
-        } else {
-            province2(json);
+        saveAllEntity = AddressSaveAllEntity.newInstance(mContext.getApplicationContext());
+        if (saveAllEntity.isSave()) {  //已经保存过，直接取值
+            area = saveAllEntity.getArea();
+            areacode = saveAllEntity.getAreacode();
+            area_city = saveAllEntity.getArea_city();
+            area_citycode = saveAllEntity.getArea_citycode();
+            area_country = saveAllEntity.getArea_country();
+            area_countrycode = saveAllEntity.getArea_countrycode();
+        } else {  //第一次，需要保存
+            json = readFromAsset(context);
+            if (TYPE.getValue() == 1) {
+                province(json);
+            } else {
+                province2(json);
+            }
+            saveAllEntity.setSave(true);
         }
+
         wArea.addChangingListener(this);
         wArea_child.addChangingListener(this);
         wArea.setVisibleItems(5);
@@ -155,6 +169,7 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
         return null;
     }
 
+
     private void province(String res) {
         if (res.length() != 0) {
             try {
@@ -164,6 +179,8 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                     JSONArray regions = list.optJSONArray("regions");
                     area = new String[regions.length()];
                     areacode = new String[regions.length()];
+                    saveAllEntity.setArea(area);
+                    saveAllEntity.setAreacode(areacode);
                     for (int i = 0; i < regions.length(); i++) {
                         JSONObject p = regions.optJSONObject(i);
                         String pname = p.optString("name");
@@ -198,6 +215,11 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                         area_countrycode.put(i, districtcode);//城区id
                         area_city.put(i, city);//city
                         area_citycode.put(i, citycode);//city id
+
+                        saveAllEntity.setArea_country(area_country);
+                        saveAllEntity.setArea_countrycode(area_countrycode);
+                        saveAllEntity.setArea_city(area_city);
+                        saveAllEntity.setArea_citycode(area_citycode);
                     }
                 }
             } catch (JSONException e) {
@@ -225,6 +247,8 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                             String[] citycode = new String[]{"0"};
                             area_city.put(i, city);//city
                             area_citycode.put(i, citycode);//city id
+                            saveAllEntity.setArea(area);
+                            saveAllEntity.setAreacode(areacode);
                             dname.put(i, city);
                             dcode.put(i, citycode);
                             area_country.put(i, dname);
@@ -285,6 +309,11 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                             area_countrycode.put(i, districtcode);//城区id
                             area_city.put(i, city);//city
                             area_citycode.put(i, citycode);//city id
+
+                            saveAllEntity.setArea_country(area_country);
+                            saveAllEntity.setArea_countrycode(area_countrycode);
+                            saveAllEntity.setArea_city(area_city);
+                            saveAllEntity.setArea_citycode(area_citycode);
                         }
                     }
                 }
@@ -295,6 +324,14 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
     }
 
     public interface OnWheelClickLitener {
+        /**
+         * @param provinceName 省、自治区名称
+         * @param provinceID   省id
+         * @param cityName     城市名称
+         * @param cityID       城市id
+         * @param countryName  城区、县名称
+         * @param countryID    城区、县id
+         */
         void onOKClick(String provinceName, String provinceID, String cityName, String cityID, String countryName, String countryID);
 
         void onCancelClick();
