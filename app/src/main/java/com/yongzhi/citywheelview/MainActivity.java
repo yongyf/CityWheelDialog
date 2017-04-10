@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.wheelview.library.dialog.DialogStyle;
 import com.wheelview.library.dialog.MyWheelDialog;
 
 
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements MyWheelDialog.OnW
     }
 
     private void init() {
-        d = new MyWheelDialog(this, this);
+        d = new MyWheelDialog(this, DialogStyle.STANDARD,this);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

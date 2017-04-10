@@ -47,10 +47,12 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
     private HashMap<Integer, HashMap<Integer, String[]>> area_country = new HashMap<>();
     private HashMap<Integer, HashMap<Integer, String[]>> area_countrycode = new HashMap<>();
     public static final String TAG = "qqq";
+    public DialogStyle TYPE;
 
-    public MyWheelDialog(Context context, OnWheelClickLitener wheelClickLitener) {
+    public MyWheelDialog(Context context, DialogStyle type, OnWheelClickLitener wheelClickLitener) {
         super(context, R.style.transparentFrameWindowStyle);
         mContext = context;
+        this.TYPE = type;
         mWheelClickLitener = wheelClickLitener;
         view = View.inflate(context, R.layout.dialog_select_area, null);
         setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -78,7 +80,11 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
          * 加载数据
          */
         json = readFromAsset(context);
-        province(json);
+        if (TYPE.getValue() == 1) {
+            province(json);
+        } else {
+            province2(json);
+        }
         wArea.addChangingListener(this);
         wArea_child.addChangingListener(this);
         wArea.setVisibleItems(5);
@@ -200,6 +206,93 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
         }
     }
 
+    private void province2(String res) {
+        if (res.length() != 0) {
+            try {
+                JSONObject jsonObject = new JSONObject(res);
+                if (jsonObject.optString("code").equals("40000")) {
+                    JSONObject list = jsonObject.optJSONObject("list");
+                    JSONArray regions = list.optJSONArray("regions");
+                    area = new String[regions.length() + 1];
+                    areacode = new String[regions.length() + 1];
+                    HashMap<Integer, String[]> dname = new HashMap<>();//城区
+                    HashMap<Integer, String[]> dcode = new HashMap<>();//城区id
+                    for (int i = 0; i < regions.length() + 1; i++) {
+                        if (i == 0) {
+                            area[i] = "全部";//省
+                            areacode[i] = "0";//省id
+                            String[] city = new String[]{"全部"};
+                            String[] citycode = new String[]{"0"};
+                            area_city.put(i, city);//city
+                            area_citycode.put(i, citycode);//city id
+                            dname.put(i, city);
+                            dcode.put(i, citycode);
+                            area_country.put(i, dname);
+                            area_countrycode.put(i, dcode);
+                        } else {
+                            JSONObject p = regions.optJSONObject(i - 1);
+                            String pname = p.optString("name");
+                            String pcode = p.optString("regions_id");
+                            area[i] = pname;//省
+                            areacode[i] = pcode;//省id
+//                            Log.e("aa", " sheng " + area);
+                            JSONArray citylist = p.optJSONArray("child");
+                            String[] city = null;
+                            String[] citycode = null;
+                            city = new String[citylist.length() + 1];
+                            citycode = new String[citylist.length() + 1];
+                            HashMap<Integer, String[]> district = new HashMap<>();//城区
+                            HashMap<Integer, String[]> districtcode = new HashMap<>();//城区id
+                            for (int j = 0; j < citylist.length() + 1; j++) {
+                                String[] country = null;
+                                String[] countrycode = null;
+                                if (j == 0) {
+                                    city[j] = "全部";
+                                    citycode[j] = "0";
+                                    country = new String[]{"全部"};
+                                    countrycode = new String[]{"0"};
+                                    district.put(0, country);
+                                    districtcode.put(0, countrycode);
+                                    area_country.put(0, district);//城区
+                                    area_countrycode.put(0, districtcode);//城区id
+                                } else {
+                                    JSONObject c = citylist.optJSONObject(j - 1);
+                                    String cname = c.optString("name");
+                                    String ccode = c.optString("regions_id");
+                                    JSONArray countrylist = c.optJSONArray("child");
+                                    country = new String[countrylist.length() + 1];
+                                    countrycode = new String[countrylist.length() + 1];
+                                    city[j] = cname;
+                                    citycode[j] = ccode;
+                                    for (int k = 0; k < countrylist.length() + 1; k++) {
+                                        if (k == 0) {
+                                            country[k] = "全部";
+                                            countrycode[k] = "0";
+                                        } else {
+                                            JSONObject countryObj = countrylist.optJSONObject(k - 1);
+                                            String countryname = countryObj.optString("name");
+                                            String countrycode1 = countryObj.optString("regions_id");
+                                            country[k] = countryname;
+                                            countrycode[k] = countrycode1;
+                                        }
+                                    }
+                                    district.put(j, country);
+                                    districtcode.put(j, countrycode);
+                                }
+
+                            }
+                            area_country.put(i, district);//城区
+                            area_countrycode.put(i, districtcode);//城区id
+                            area_city.put(i, city);//city
+                            area_citycode.put(i, citycode);//city id
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public interface OnWheelClickLitener {
         void onOKClick(String provinceName, String provinceID, String cityName, String cityID, String countryName, String countryID);
