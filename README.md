@@ -17,7 +17,7 @@
  
  ```
  ?dependencies {
-	   compile 'com.github.yonzhi:CityWheelDialog:v1.0.2'
+	   compile 'com.github.yonzhi:CityWheelDialog:v1.0.5'
 	}
  ```
 ##1.创建对话框
@@ -35,8 +35,8 @@ mDialog.show();
 
 ```
 @Override
-    public void onOKClick(String provinceName, String provinceID, String cityName, String cityID, String countryName, String countryID) {
-        tv.setText(provinceName + " " + provinceID + " " + cityName + " " +cityID + " " + countryName + " " + countryID);
+    public void onOKClick(Address address)     {
+              Toast.makeText(this, "::"+address.getProvinceName() + address.getProvinceID(),Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onCancelClick() {
