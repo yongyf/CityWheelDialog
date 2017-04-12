@@ -1,4 +1,4 @@
-package com.wheelview.library.dialog;
+package com.wheelview.library.dialog.entity;
 
 import android.content.Context;
 

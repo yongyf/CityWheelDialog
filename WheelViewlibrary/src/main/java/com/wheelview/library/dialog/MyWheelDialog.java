@@ -9,10 +9,13 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.wheelview.library.R;
+import com.wheelview.library.dialog.callback.OnWheelClickLitener;
+import com.wheelview.library.dialog.entity.Address;
 import com.wheelview.library.wheelview.CommonUntil;
 import com.wheelview.library.wheelview.OnWheelChangedListener;
 import com.wheelview.library.wheelview.WheelView;
 import com.wheelview.library.wheelview.adapter.ArrayWheelAdapter;
+import com.wheelview.library.wheelview.bean.AddressSaveAllEntity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -127,7 +130,8 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                 countryName = "";
                 countryID = "";
             }
-            mWheelClickLitener.onOKClick(provinceName, provinceID, cityName, cityID, countryName, countryID);
+            Address mAddress = new Address(provinceName, provinceID, cityName, cityID, countryName, countryID);
+            mWheelClickLitener.onOkClick(mAddress);
             dismiss();
         } else if (v.getId() == R.id.tv_cancel) {
             mWheelClickLitener.onCancelClick();

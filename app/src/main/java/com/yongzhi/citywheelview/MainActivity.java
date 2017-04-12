@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.wheelview.library.dialog.DialogStyle;
 import com.wheelview.library.dialog.MyWheelDialog;
-import com.wheelview.library.dialog.OnWheelClickLitener;
+import com.wheelview.library.dialog.callback.OnWheelClickLitener;
 
 
 public class MainActivity extends Activity implements OnWheelClickLitener {
