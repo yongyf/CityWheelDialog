@@ -9,7 +9,7 @@ import com.wheelview.library.dialog.entity.Address;
  * @reviser_and_time:
  */
 
-public interface OnWheelClickLitener {
+public interface OnWheelClickListener {
 
     void onOkClick(Address address);
 

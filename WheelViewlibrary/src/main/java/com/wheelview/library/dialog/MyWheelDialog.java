@@ -9,7 +9,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.wheelview.library.R;
-import com.wheelview.library.dialog.callback.OnWheelClickLitener;
+import com.wheelview.library.dialog.callback.OnWheelClickListener;
 import com.wheelview.library.dialog.entity.Address;
 import com.wheelview.library.wheelview.CommonUntil;
 import com.wheelview.library.wheelview.OnWheelChangedListener;
@@ -35,7 +35,7 @@ import java.util.HashMap;
 
 public class MyWheelDialog extends Dialog implements OnWheelChangedListener, View.OnClickListener {
     private final Context mContext;
-    private final OnWheelClickLitener mWheelClickLitener;
+    private final OnWheelClickListener mWheelClickLitener;
     private String json = "";
     private View view;
     private final WheelView wArea;
@@ -54,7 +54,7 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
     private AddressSaveAllEntity saveAllEntity = null;
 
 
-    public MyWheelDialog(Context context, DialogStyle type, OnWheelClickLitener wheelClickLitener) {
+    public MyWheelDialog(Context context, DialogStyle type, OnWheelClickListener wheelClickLitener) {
         super(context, R.style.transparentFrameWindowStyle);
         mContext = context;
         this.TYPE = type;
