@@ -17,7 +17,7 @@
  
  ```
  ?dependencies {
-	   compile 'com.github.yonzhi:CityWheelDialog:v1.0.5'
+	   compile 'com.github.yonzhi:CityWheelDialog:v1.0.6'
 	}
  ```
 ##1.创建对话框
