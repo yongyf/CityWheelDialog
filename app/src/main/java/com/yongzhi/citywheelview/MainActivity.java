@@ -7,8 +7,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.wheelview.library.dialog.DialogStyle;
+import com.wheelview.library.dialog.LoadStyle;
 import com.wheelview.library.dialog.MyWheelDialog;
 import com.wheelview.library.dialog.callback.OnWheelClickListener;
+import com.wheelview.library.dialog.entity.Address;
 
 
 public class MainActivity extends Activity implements OnWheelClickListener {
@@ -31,7 +33,7 @@ public class MainActivity extends Activity implements OnWheelClickListener {
     }
 
     private void init() {
-        d = new MyWheelDialog(this, DialogStyle.STANDARD,this);
+        d = new MyWheelDialog(this, DialogStyle.STANDARD, LoadStyle.PROVINCE_CITY,this);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,9 +44,9 @@ public class MainActivity extends Activity implements OnWheelClickListener {
     }
 
     @Override
-    public void onOKClick(String provinceName, String provinceID, String cityName, String cityID, String countryName, String countryID) {
-        tv.setText(provinceName + " " + provinceID + " " + cityName + " " +
-                cityID + " " + countryName + " " + countryID);
+    public void onOkClick(Address address) {
+        tv.setText(address.getProvinceName() + " " + address.getCountryName() + " " + address.getCountryName() + " " +
+                address.getProvinceID() + " " + address.getCityID() + " " + address.getCountryID());
     }
 
     @Override

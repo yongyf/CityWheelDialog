@@ -50,14 +50,16 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
     private HashMap<Integer, HashMap<Integer, String[]>> area_country = new HashMap<>();
     private HashMap<Integer, HashMap<Integer, String[]>> area_countrycode = new HashMap<>();
     public static final String TAG = "test";
-    private DialogStyle TYPE;
+    private DialogStyle mDialogStyle;
+    private LoadStyle mLoadStyle;
     private AddressSaveAllEntity saveAllEntity = null;
 
 
-    public MyWheelDialog(Context context, DialogStyle type, OnWheelClickListener wheelClickLitener) {
+    public MyWheelDialog(Context context, DialogStyle type, LoadStyle dat, OnWheelClickListener wheelClickLitener) {
         super(context, R.style.transparentFrameWindowStyle);
         mContext = context;
-        this.TYPE = type;
+        this.mDialogStyle = type;
+        this.mLoadStyle = dat;
         mWheelClickLitener = wheelClickLitener;
         view = View.inflate(context, R.layout.dialog_select_area, null);
         setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -82,6 +84,16 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
         area_tv_ok = (TextView) view.findViewById(R.id.tv_ok);
         area_tv_cancel = (TextView) view.findViewById(R.id.tv_cancel);
         /**
+         * 省市区样式LoadStyle
+         * ALL(省市区全部显示)，PROVINCE(只显示省)，PROVINCE_CITY（只显示省市）
+         */
+        if (mLoadStyle.getValue() == 2) {
+            wArea_child.setVisibility(View.GONE);
+            wArea_child2.setVisibility(View.GONE);
+        } else if (mLoadStyle.getValue() == 3) {
+            wArea_child2.setVisibility(View.GONE);
+        }
+        /**
          * 加载数据
          */
         saveAllEntity = AddressSaveAllEntity.newInstance(mContext.getApplicationContext());
@@ -94,7 +106,8 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
             area_countrycode = saveAllEntity.getArea_countrycode();
         } else {  //第一次，需要保存
             json = readFromAsset(context);
-            if (TYPE.getValue() == 1) {
+            //DialogStyle是否显示全部
+            if (mDialogStyle.getValue() == 1) {
                 province(json);
             } else {
                 province2(json);
