@@ -17,14 +17,15 @@
  
  ```
  ?dependencies {
-	   compile 'com.github.yonzhi:CityWheelDialog:v1.0.6'
+	   compile 'com.github.yonzhi:CityWheelDialog:v1.0.7'
 	}
  ```
 ##1.创建对话框
 
 ```
-// NORMAL:正常显示默认省市区  STANDARD：默认显示全部
- MyWheelDialog mDialog=new My MyWheelDialog(context,DialogStyle.NORMAL,this);
+//对话框样式 NORMAL:正常显示默认省市区  STANDARD：默认显示全部
+//省市区显示加载样式LoadStyle ,ALL(省市区全部显示)，PROVINCE(只显示省)，PROVINCE_CITY（只显示省市）
+ MyWheelDialog mDialog=new My MyWheelDialog(context,DialogStyle.NORMAL,LoadStyle.ALL,this);
 ```
 ##2.显示对话框：
 ```
