@@ -33,7 +33,7 @@ public class MainActivity extends Activity implements OnWheelClickListener {
     }
 
     private void init() {
-        d = new MyWheelDialog(this, DialogStyle.STANDARD, LoadStyle.PROVINCE_CITY,this);
+        d = new MyWheelDialog(this, DialogStyle.STANDARD, LoadStyle.ALL,this);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

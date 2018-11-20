@@ -200,7 +200,7 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                     saveAllEntity.setAreacode(areacode);
                     for (int i = 0; i < regions.length(); i++) {
                         JSONObject p = regions.optJSONObject(i);
-                        String pname = p.optString("name");
+                        String pname = p.optString("title");
                         String pcode = p.optString("regions_id");
                         area[i] = pname;//省
                         areacode[i] = pcode;//省id
@@ -211,7 +211,7 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                         HashMap<Integer, String[]> districtcode = new HashMap<>();//城区id
                         for (int j = 0; j < citylist.length(); j++) {
                             JSONObject c = citylist.optJSONObject(j);
-                            String cname = c.optString("name");
+                            String cname = c.optString("title");
                             String ccode = c.optString("regions_id");
                             city[j] = cname;
                             citycode[j] = ccode;
@@ -220,7 +220,7 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                             String[] countrycode = new String[countrylist.length()];
                             for (int k = 0; k < countrylist.length(); k++) {
                                 JSONObject countryObj = countrylist.optJSONObject(k);
-                                String countryname = countryObj.optString("name");
+                                String countryname = countryObj.optString("title");
                                 String countrycode1 = countryObj.optString("regions_id");
                                 country[k] = countryname;
                                 countrycode[k] = countrycode1;
@@ -272,7 +272,7 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                             area_countrycode.put(i, dcode);
                         } else {
                             JSONObject p = regions.optJSONObject(i - 1);
-                            String pname = p.optString("name");
+                            String pname = p.optString("title");
                             String pcode = p.optString("regions_id");
                             area[i] = pname;//省
                             areacode[i] = pcode;//省id
@@ -298,7 +298,7 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                                     area_countrycode.put(0, districtcode);//城区id
                                 } else {
                                     JSONObject c = citylist.optJSONObject(j - 1);
-                                    String cname = c.optString("name");
+                                    String cname = c.optString("title");
                                     String ccode = c.optString("regions_id");
                                     JSONArray countrylist = c.optJSONArray("child");
                                     country = new String[countrylist.length() + 1];
@@ -311,7 +311,7 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                                             countrycode[k] = "0";
                                         } else {
                                             JSONObject countryObj = countrylist.optJSONObject(k - 1);
-                                            String countryname = countryObj.optString("name");
+                                            String countryname = countryObj.optString("title");
                                             String countrycode1 = countryObj.optString("regions_id");
                                             country[k] = countryname;
                                             countrycode[k] = countrycode1;
