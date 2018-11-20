@@ -45,7 +45,7 @@ public class MainActivity extends Activity implements OnWheelClickListener {
 
     @Override
     public void onOkClick(Address address) {
-        tv.setText(address.getProvinceName() + " " + address.getCountryName() + " " + address.getCountryName() + " " +
+        tv.setText(address.getProvinceName() + " " + address.getCityName() + " " + address.getCountryName() + " " +
                 address.getProvinceID() + " " + address.getCityID() + " " + address.getCountryID());
     }
 
