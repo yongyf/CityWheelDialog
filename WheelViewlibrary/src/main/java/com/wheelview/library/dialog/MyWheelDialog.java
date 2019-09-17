@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.wheelview.library.R;
 import com.wheelview.library.dialog.callback.OnWheelClickListener;
+import com.wheelview.library.dialog.entity.Address;
 import com.wheelview.library.dialog.entity.AddressSaveAllEntity;
 import com.wheelview.library.util.CommonUtil;
 import com.wheelview.library.util.DefaultThreadExecutor;
@@ -30,10 +31,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 /**
- * @desc：
- * @author: yongzhi
- * @time: 2017/2/20 0020
- * @reviser_and_time:
+ * Describe：省市区弹框
+ *
+ * @author 张勇[462495608@qq.com] at 2019/9/17 15:42
  */
 
 public class MyWheelDialog extends Dialog implements OnWheelChangedListener, View.OnClickListener {
@@ -117,16 +117,11 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
     }
 
     private boolean isInitData;
-    LoadDialog mLoadDialog;
     private Handler handler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             if (msg.what == 1) {
                 initView();
-                if (mLoadDialog != null && mLoadDialog.isShowing()) {
-                    mLoadDialog.dismiss();
-                    show();
-                }
                 return true;
             }
             return false;
@@ -136,8 +131,6 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
     @Override
     public void show() {
         if (!isInitData) {
-            mLoadDialog = new LoadDialog(mContext);
-            mLoadDialog.show();
             return;
         }
         super.show();
