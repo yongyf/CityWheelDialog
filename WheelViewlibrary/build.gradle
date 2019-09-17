@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion 23
-        versionCode 174121524
-        versionName "1.0.4"
+        minSdkVersion 17
+        targetSdkVersion 28
+        versionCode 20
+        versionName "2.0.0"
 
     }
     buildTypes {
@@ -45,7 +45,7 @@ artifacts {
     archives javadocJar
 }
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'com.android.support:appcompat-v7:25+'
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly 'com.android.support:appcompat-v7:28+'
+    testImplementation 'junit:junit:4.12'
 }

@@ -2,6 +2,9 @@ package com.wheelview.library.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -10,12 +13,12 @@ import android.widget.TextView;
 
 import com.wheelview.library.R;
 import com.wheelview.library.dialog.callback.OnWheelClickListener;
-import com.wheelview.library.dialog.entity.Address;
-import com.wheelview.library.wheelview.CommonUntil;
+import com.wheelview.library.dialog.entity.AddressSaveAllEntity;
+import com.wheelview.library.util.CommonUtil;
+import com.wheelview.library.util.DefaultThreadExecutor;
 import com.wheelview.library.wheelview.OnWheelChangedListener;
 import com.wheelview.library.wheelview.WheelView;
 import com.wheelview.library.wheelview.adapter.ArrayWheelAdapter;
-import com.wheelview.library.wheelview.bean.AddressSaveAllEntity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +39,6 @@ import java.util.HashMap;
 public class MyWheelDialog extends Dialog implements OnWheelChangedListener, View.OnClickListener {
     private final Context mContext;
     private final OnWheelClickListener mWheelClickLitener;
-    private String json = "";
     private View view;
     private final WheelView wArea;
     private final WheelView wArea_child;
@@ -63,7 +65,7 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
         mWheelClickLitener = wheelClickLitener;
         view = View.inflate(context, R.layout.dialog_select_area, null);
         setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                CommonUntil.getScreenHeight(context) / 3));
+                CommonUtil.getScreenHeight(context) / 2 - 100));
         Window window = getWindow();
         // 设置显示动画
         window.setWindowAnimations(R.style.Dialog_animstyle);
@@ -93,37 +95,68 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
         } else if (mLoadStyle.getValue() == 3) {
             wArea_child2.setVisibility(View.GONE);
         }
-        /**
-         * 加载数据
-         */
         saveAllEntity = AddressSaveAllEntity.newInstance(mContext.getApplicationContext());
-        if (saveAllEntity.isSave()) {  //已经保存过，直接取值
-            area = saveAllEntity.getArea();
-            areacode = saveAllEntity.getAreacode();
-            area_city = saveAllEntity.getArea_city();
-            area_citycode = saveAllEntity.getArea_citycode();
-            area_country = saveAllEntity.getArea_country();
-            area_countrycode = saveAllEntity.getArea_countrycode();
-        } else {  //第一次，需要保存
-            json = readFromAsset(context);
+        fillData();
+
+    }
+
+    private void initView() {
+        wArea.addChangingListener(this);
+        wArea_child.addChangingListener(this);
+        wArea.setVisibleItems(5);
+        wArea.setViewAdapter(new ArrayWheelAdapter<>(
+                mContext, area));
+        wArea_child.setViewAdapter(new ArrayWheelAdapter<>(mContext, area_city.get(0)));
+        wArea_child2.setViewAdapter(new ArrayWheelAdapter<>(mContext, area_country.get(0).get(0)));
+        area_tv_ok.setOnClickListener(this);
+        area_tv_cancel.setOnClickListener(this);
+    }
+
+    private void fillData() {
+        DefaultThreadExecutor.getInstance().execute(new FillDataTask());
+    }
+
+    private boolean isInitData;
+    LoadDialog mLoadDialog;
+    private Handler handler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == 1) {
+                initView();
+                if (mLoadDialog != null && mLoadDialog.isShowing()) {
+                    mLoadDialog.dismiss();
+                    show();
+                }
+                return true;
+            }
+            return false;
+        }
+    });
+
+    @Override
+    public void show() {
+        if (!isInitData) {
+            mLoadDialog = new LoadDialog(mContext);
+            mLoadDialog.show();
+            return;
+        }
+        super.show();
+    }
+
+    private class FillDataTask implements Runnable {
+        @Override
+        public void run() {
+            handler.sendEmptyMessage(0);
+            String json = readFromAsset(mContext);
             //DialogStyle是否显示全部
             if (mDialogStyle.getValue() == 1) {
                 province(json);
             } else {
                 province2(json);
             }
-            saveAllEntity.setSave(true);
+            isInitData = true;
+            handler.sendEmptyMessage(1);
         }
-
-        wArea.addChangingListener(this);
-        wArea_child.addChangingListener(this);
-        wArea.setVisibleItems(5);
-        wArea.setViewAdapter(new ArrayWheelAdapter<String>(
-                mContext, area));
-        wArea_child.setViewAdapter(new ArrayWheelAdapter<String>(mContext, area_city.get(0)));
-        wArea_child2.setViewAdapter(new ArrayWheelAdapter<String>(mContext, area_country.get(0).get(0)));
-        area_tv_ok.setOnClickListener(this);
-        area_tv_cancel.setOnClickListener(this);
     }
 
     @Override
@@ -288,9 +321,9 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                                 String[] country = null;
                                 String[] countrycode = null;
                                 if (j == 0) {
-                                    city[j] = "全部";
+                                    city[j] = "全市";
                                     citycode[j] = "0";
-                                    country = new String[]{"全部"};
+                                    country = new String[]{"全市"};
                                     countrycode = new String[]{"0"};
                                     district.put(0, country);
                                     districtcode.put(0, countrycode);
@@ -307,7 +340,7 @@ public class MyWheelDialog extends Dialog implements OnWheelChangedListener, Vie
                                     citycode[j] = ccode;
                                     for (int k = 0; k < countrylist.length() + 1; k++) {
                                         if (k == 0) {
-                                            country[k] = "全部";
+                                            country[k] = "全区";
                                             countrycode[k] = "0";
                                         } else {
                                             JSONObject countryObj = countrylist.optJSONObject(k - 1);

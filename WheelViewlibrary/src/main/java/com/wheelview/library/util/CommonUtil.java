@@ -1,4 +1,4 @@
-package com.wheelview.library.wheelview;
+package com.wheelview.library.util;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
@@ -11,7 +11,7 @@ import android.view.WindowManager;
  * @reviser_and_time:
  */
 
-public class CommonUntil {
+public class CommonUtil {
     //获取屏幕高度
     public static int getScreenHeight(Context context) {
         WindowManager wm = (WindowManager) context
